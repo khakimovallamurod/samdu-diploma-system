@@ -29,7 +29,7 @@ async def file_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     await file.download_to_drive(file_path)
     context.user_data['file_path'] = file_path
 
-    await update.message.reply_text("Iltimos, diplomingizning raqamini (B №) kiriting. Masalan: B №1234567")
+    await update.message.reply_text("File qabul qilindi. Iltimos, qaror qabul qilingan sanani kiriting (YYYY-MM-DD formatida)")
     return DATE
 
 async def date_handler(update: Update, context: CallbackContext) -> int:
