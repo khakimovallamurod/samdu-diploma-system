@@ -52,12 +52,16 @@ def create_diplom_kuchirma_hujjat(student_data, sana,  fayl_nomi='bitiruvchi_dip
         run = p.add_run(text)
         run.font.name = 'Times New Roman'
         run._element.rPr.rFonts.set(qn('w:eastAsia'), 'Times New Roman')
+        run._element.rPr.rFonts.set(qn('w:ascii'), 'Times New Roman')
+        run._element.rPr.rFonts.set(qn('w:hAnsi'), 'Times New Roman')
         run.font.size = Pt(size)
         run.bold = bold
         p.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER if center else WD_PARAGRAPH_ALIGNMENT.LEFT
 
         p_format = p.paragraph_format
         p_format.line_spacing = Pt(12)
+        p_format.space_before = Pt(0)
+        p_format.space_after = Pt(0)
 
     def fill_cell(cell, item):
         add_line(cell, "O‘ZBEKISTON RESPUBLIKASI", 12, bold=True)
@@ -71,7 +75,7 @@ def create_diplom_kuchirma_hujjat(student_data, sana,  fayl_nomi='bitiruvchi_dip
         add_line(cell, f"{sana}", 14, bold=True)
         add_line(cell, "qaroriga  binoan", 14, bold=True)
         fish = item['F.I.Sh.'] if item['F.I.Sh.'] != '' else "____________________________________"
-        add_line(cell, f"{fish} ga", 14)
+        add_line(cell, f"{fish}ga", 14)
         yunalish = item['Yonalish'] if item['Yonalish'] != '' else "____________________________________"
         add_line(cell, f"{yunalish} yo’nalishi bo’yicha", 14)
         add_line(cell, "B A K A L A V R", 16, bold=True)
