@@ -60,8 +60,7 @@ def create_diplom_kuchirma_hujjat(student_data, sana,  fayl_nomi='bitiruvchi_dip
 
         p_format = p.paragraph_format
         p_format.line_spacing = Pt(12)
-        p_format.space_before = Pt(0)
-        p_format.space_after = Pt(0)
+
 
     def fill_cell(cell, item):
         add_line(cell, "O‘ZBEKISTON RESPUBLIKASI", 12, bold=True)
