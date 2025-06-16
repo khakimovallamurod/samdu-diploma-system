@@ -10,12 +10,13 @@ from datetime import date
 def get_student_data(file_path):
     df = pd.read_excel(file_path, header=7)
 
-    selected_columns = df.iloc[:, [0, 1, 9, 14]]
-    selected_columns.columns = ["ID", 'F.I.Sh.', 'Yonalish', 'Kvalifikatsiya']
+    selected_columns = df.iloc[:, [0, 1, 9, 12, 13, 14]]
+    selected_columns.columns = ["ID", 'F.I.Sh.', 'Yonalish', "diplom_id", "tartib_raqam", "Kvalifikatsiya"]
 
     selected_columns = selected_columns.dropna(
         how='all',
-        subset=["ID", 'F.I.Sh.', 'Yonalish', 'Kvalifikatsiya']
+        subset=["ID", 'F.I.Sh.', 'Yonalish', 'Kvalifikatsiya', 
+                "diplom_id", "tartib_raqam"]
     )
 
     selected_columns = selected_columns.fillna("")
@@ -34,7 +35,7 @@ def date_to_string(date_obj):
     return f"{year} yil {day}-{month_name.lower()} dagi"
 
 
-def create_diplom_kuchirma_hujjat(student_data, qaror_id, sana,  fayl_nomi='bitiruvchi_diplom_kuchirma.docx'):
+def create_diplom_kuchirma_hujjat(student_data, sana,  fayl_nomi='bitiruvchi_diplom_kuchirma.docx'):
     doc = Document()
 
     section = doc.sections[0]
@@ -62,8 +63,9 @@ def create_diplom_kuchirma_hujjat(student_data, qaror_id, sana,  fayl_nomi='biti
         add_line(cell, "O‘ZBEKISTON RESPUBLIKASI", 12, bold=True)
         add_line(cell, "BAKALAVR", 12, bold=True)
         add_line(cell, "DIPLOMI", 12, bold=True)
-        add_line(cell, f"B № {qaror_id}", 14)
-        add_line(cell, "K O‘Ch I R M A", 16, bold=True)
+        qaror_id = item['diplom_id'] if item['diplom_id'] != '' else "B №____________"
+        add_line(cell, qaror_id, 14)
+        add_line(cell, "K O‘ Ch I R M A", 16, bold=True)
         add_line(cell, "SAMARQAND DAVLAT UNIVERSITETI", 14, bold=True)
         add_line(cell, "Davlat attestasiya komissiyasining", 14, bold=True)
         add_line(cell, f"{sana}", 14, bold=True)
@@ -76,8 +78,10 @@ def create_diplom_kuchirma_hujjat(student_data, qaror_id, sana,  fayl_nomi='biti
         add_line(cell, "DARAJASI", 14, bold=True)
         kval = item['Kvalifikatsiya'] if item['Kvalifikatsiya'] != '' else "____________________________________"
         add_line(cell, f"va {kval} kvalifikatsiyasi berildi", 14)
-        add_line(cell, f"Ro‘yxatga olish raqami {int(item['ID']) if item['ID'] != '' else '______'}", 14, center=False)
-        add_line(cell, "    Ushbu ko‘chirma faqat ________ sonli yo‘llanma bilan o‘z kuchiga ega.", 14, center=False)
+        tartib_raqam = item['tartib_raqam'] if item['tartib_raqam'] != '' else "________________"
+        add_line(cell, f"Ro‘yxatga olish raqami {tartib_raqam}", 14, center=False)
+        id = item['ID'] if item['ID'] != '' else "________"
+        add_line(cell, f"    Ushbu ko‘chirma faqat {id} sonli yo‘llanma bilan o‘z kuchiga ega.", 14, center=False)
         add_line(cell, "Davlat attestatsiya va taqsimot", 14, center=False)
         add_line(cell, "komissiyalari raisi.", 14, center=False)
         add_line(cell, "Rektor                          R.I.Xalmuradov", 14)
@@ -100,15 +104,13 @@ def create_diplom_kuchirma_hujjat(student_data, qaror_id, sana,  fayl_nomi='biti
 
 
 
-def main(file_path, qaror_id, sana):
+def main(file_path, sana):
+    sana_str = date_to_string(sana)
     student_data = get_student_data(file_path)
-    output_file = create_diplom_kuchirma_hujjat(student_data, qaror_id, sana)
+    output_file = create_diplom_kuchirma_hujjat(student_data, sana_str)
     return output_file
 
 if __name__ == "__main__":
-    # Example usage
     file_path = 'битирувчи 2024-2025 кит чун АСЛ (2).xlsx'  # Replace with your actual file path
-    qaror_id = '1234567'  # Example qaror ID
-    sana = date(2023, 10, 1)  # Example date
-    sana_str = date_to_string(sana)
-    main(file_path, qaror_id, sana_str)
+    sana = date(2023, 10, 1)  
+    main(file_path, sana)

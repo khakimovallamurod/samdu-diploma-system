@@ -11,7 +11,6 @@ def main():
         entry_points=[CommandHandler("diplom_kochirma", handlears.start_diplom)],
         states={
             handlears.FILE: [MessageHandler(filters.Document.ALL, handlears.file_handler)],
-            handlears.ID: [MessageHandler(filters.TEXT & ~filters.COMMAND, handlears.id_handler)],
             handlears.DATE: [MessageHandler(filters.TEXT & ~filters.COMMAND, handlears.date_handler)],
         },
         fallbacks=[],

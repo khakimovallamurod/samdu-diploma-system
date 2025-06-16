@@ -3,7 +3,7 @@ from telegram.ext import CallbackContext, ConversationHandler, ContextTypes
 import os 
 import write_docx
 
-FILE, ID, DATE = range(3)
+FILE, DATE = range(2)
 
 async def start(update: Update, context: CallbackContext) -> None:
     
@@ -30,15 +30,6 @@ async def file_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> in
     context.user_data['file_path'] = file_path
 
     await update.message.reply_text("Iltimos, diplomingizning raqamini (B №) kiriting. Masalan: B №1234567")
-    return ID
-
-async def id_handler(update: Update, context: CallbackContext) -> int:
-    if not update.message.text:
-        await update.message.reply_text("Iltimos, diplom raqamini matn sifatida kiriting.")
-        return ID
-    diploma_id = update.message.text
-    context.user_data['diploma_id'] = diploma_id
-    await update.message.reply_text("Diplom raqami qabul qilindi. Iltimos, qaror qabul qilingan sanani kiriting (YYYY-MM-DD formatida)")
     return DATE
 
 async def date_handler(update: Update, context: CallbackContext) -> int:
@@ -55,9 +46,8 @@ async def date_handler(update: Update, context: CallbackContext) -> int:
     context.user_data['date'] = date
     status_message = await update.message.reply_text("🛠 Diplom ko'chirma hujjati tayyorlanmoqda...")
     file_path = context.user_data.get('file_path')
-    diploma_id = context.user_data.get('diploma_id')
     date = context.user_data.get('date')
 
-    output_file = write_docx.main(file_path, diploma_id, date)
+    output_file = write_docx.main(file_path, date)
     await status_message.delete()
     await update.message.reply_document(document=output_file, caption="✅ Diplom ko'chirma hujjati")
