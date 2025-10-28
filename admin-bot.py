@@ -1,4 +1,4 @@
-from telegram.ext import Updater, CommandHandler, MessageHandler, filters, ConversationHandler, CallbackContext, Application
+from telegram.ext import Updater, CommandHandler, MessageHandler, filters, ConversationHandler, CallbackContext, Application,CallbackQueryHandler
 from telegram import Update
 from config import get_token
 import handlears
@@ -10,6 +10,7 @@ def main():
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("diplom_kochirma", handlears.start_diplom)],
         states={
+            handlears.CHOOSE: [CallbackQueryHandler(handlears.send_file)],
             handlears.FILE: [MessageHandler(filters.Document.ALL, handlears.file_handler)],
             handlears.DATE: [MessageHandler(filters.TEXT & ~filters.COMMAND, handlears.date_handler)],
         },

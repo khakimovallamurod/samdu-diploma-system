@@ -35,7 +35,7 @@ def date_to_string(date_obj):
     return f"{year} yil {day}-{month_name.lower()}dagi"
 
 
-def create_diplom_kuchirma_hujjat(student_data, sana,  fayl_nomi='bitiruvchi_diplom_kuchirma.docx'):
+def create_diplom_kuchirma_hujjat(student_data, sana, choose_kochirma, fayl_nomi='bitiruvchi_diplom_kuchirma.docx'):
     doc = Document()
 
     section = doc.sections[0]
@@ -107,7 +107,7 @@ def create_diplom_kuchirma_hujjat(student_data, sana,  fayl_nomi='bitiruvchi_dip
             p = para._element
             p.getparent().remove(p)
         add_line(cell, "O‘ZBEKISTON RESPUBLIKASI", 20, bold=True)
-        add_line(cell, "BAKALAVR", 20, bold=True)
+        add_line(cell, f"{choose_kochirma}", 20, bold=True)
         add_line(cell, "DIPLOMI", 20, bold=True)
         add_empty_line(cell, 9)
         qaror_id = item['diplom_id'] if item['diplom_id'] != '' else "B №____________"
@@ -169,10 +169,10 @@ def create_diplom_kuchirma_hujjat(student_data, sana,  fayl_nomi='bitiruvchi_dip
 
 
 
-def main(file_path, sana):
+def main(file_path, sana, choose_kochirma):
     sana_str = date_to_string(sana)
     student_data = get_student_data(file_path)
-    output_file = create_diplom_kuchirma_hujjat(student_data, sana_str)
+    output_file = create_diplom_kuchirma_hujjat(student_data, sana_str,choose_kochirma)
     return output_file
 
 if __name__ == "__main__":

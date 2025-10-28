@@ -2,18 +2,38 @@ from telegram import Update
 from telegram.ext import CallbackContext, ConversationHandler, ContextTypes
 import os 
 import write_docx
+from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 
-FILE, DATE = range(2)
+CHOOSE, FILE, DATE = range(2)
 
 async def start(update: Update, context: CallbackContext) -> None:
-    
     user = update.effective_user
     await update.message.reply_text(
-        f"Assalomu aleykum {user.full_name}!. Bakalavr dimlomdan ko'chirish jarayoniga xush kelibsiz! Jarayonini boshlash uchun /diplom_kochirma ni bosing.",)
-    
+        f"Assalomu aleykum {user.full_name}! Bakalavr diplomdan ko'chirish jarayoniga xush kelibsiz!\n"
+        "Jarayonni boshlash uchun /diplom_kochirma ni bosing."
+    )
+
 async def start_diplom(update: Update, context: CallbackContext) -> int:
+    keyboard = [
+        [InlineKeyboardButton("👨‍🎓 BAKALAVR", callback_data="bakalavr_student:BAKALAVR")],
+        [InlineKeyboardButton("🎓 MAGISTR", callback_data="magistr_student:MAGISTR")]
+    ]
+    reply_keyboard = InlineKeyboardMarkup(keyboard)
+
     await update.message.reply_text(
-        "Iltimos, talabalaringizning ma'lumotlarini yuboring(excel formatida).",
+        text="Ko'chirma turini tanlang!",
+        reply_markup=reply_keyboard
+    )
+    return CHOOSE
+
+async def send_file(update: Update, context: CallbackContext) -> int:
+    query = update.callback_query
+    await query.answer()
+
+    context.user_data['choose_student'] = query.data
+
+    await query.message.reply_text(
+        "Iltimos, talabalaringizning ma'lumotlarini yuboring (excel formatida)."
     )
     return FILE
 
@@ -47,7 +67,7 @@ async def date_handler(update: Update, context: CallbackContext) -> int:
     status_message = await update.message.reply_text("🛠 Diplom ko'chirma hujjati tayyorlanmoqda...")
     file_path = context.user_data.get('file_path')
     date = context.user_data.get('date')
-
-    output_file = write_docx.main(file_path, date)
+    choose_kochirma = context.user_data['choose_student'].split(':')[1]
+    output_file = write_docx.main(file_path, date, choose_kochirma)
     await status_message.delete()
     await update.message.reply_document(document=output_file, caption="✅ Diplom ko'chirma hujjati")
