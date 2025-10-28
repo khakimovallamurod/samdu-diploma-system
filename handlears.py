@@ -70,4 +70,4 @@ async def date_handler(update: Update, context: CallbackContext) -> int:
     choose_kochirma = context.user_data['choose_student'].split(':')[1]
     output_file = write_docx.main(file_path, date, choose_kochirma)
     await status_message.delete()
-    await update.message.reply_document(document=output_file, caption="✅ Diplom ko'chirma hujjati")
+    await update.message.reply_document(document=output_file, caption=f"{choose_kochirma} ko‘chirma fayl tayyor!")
