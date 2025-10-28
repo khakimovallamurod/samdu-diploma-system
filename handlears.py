@@ -4,7 +4,7 @@ import os
 import write_docx
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 
-CHOOSE, FILE, DATE = range(2)
+CHOOSE, FILE, DATE = range(3)
 
 async def start(update: Update, context: CallbackContext) -> None:
     user = update.effective_user
