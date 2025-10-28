@@ -130,7 +130,8 @@ def create_diplom_kuchirma_hujjat(student_data, sana, choose_kochirma, fayl_nomi
         add_line(cell, f"{yunalish}", 18)
         add_line(cell, f"  yo’nalishi bo’yicha", 14)
         add_empty_line(cell, 11)
-        add_line(cell, "B A K A L A V R", 26, bold=True)
+        kochirma_name = ' '.join([i for i in choose_kochirma])
+        add_line(cell, f"{kochirma_name}", 26, bold=True)
         add_line(cell, "DARAJASI", 22, bold=True)
         add_empty_line(cell, 8)
         kval = item['Kvalifikatsiya'] if item['Kvalifikatsiya'] != '' else "____________________________________"
